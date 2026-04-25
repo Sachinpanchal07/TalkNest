@@ -1,0 +1,30 @@
+src/
+├── assets/              # Static files (images, icons, fonts)
+├── components/          # Shared/Global UI components (Buttons, Inputs, Modals)
+│   ├── ui/              # Primitive components (shadcn/ui style)
+│   └── common/          # Reusable complex components
+├── config/              # Environment variables and global constants
+├── context/             # React Contexts (e.g., ThemeContext, SocketContext)
+├── features/            # Feature-based modules (THE CORE)
+│   ├── auth/            # Authentication logic
+│   │   ├── components/  # Login/Register forms
+│   │   ├── services/    # Auth API calls
+│   │   └── types/       # Auth-specific interfaces
+│   ├── chat/            # Private & Group Chat logic
+│   │   ├── components/  # MessageList, ChatInput, GroupModal
+│   │   ├── hooks/       # useSocket, useChatRoom
+│   │   └── services/    # Message history APIs
+│   ├── search/          # User Discovery & Invitations
+│   │   ├── components/  # SearchBar, UserResultList
+│   │   └── hooks/       # useInvitationTimer (24h cooldown logic)
+├── hooks/               # Shared custom hooks (useLocalStorage, useDebounce)
+├── layouts/             # Page wrappers (DashboardLayout, AuthLayout)
+├── lib/                 # Third-party library configs (axios instance, socket.io client)
+├── pages/               # Route components (Entry points for the router)
+├── store/               # Redux Toolkit / Zustand global state slices
+├── types/               # Global TypeScript interfaces/types
+└── utils/               # Helper functions (date formatting, validation)
+
+
+
+// Define the type of components (React.Fc);

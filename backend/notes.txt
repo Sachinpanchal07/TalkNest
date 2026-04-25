@@ -1,0 +1,30 @@
+See these-->
+Rate Limiting, Dbouncing, Throatling
+Redis, docker, api intercepter(in frontend), zod, 
+
+============================
+src/
+├── config/             # Database connection, environment variables, Cloudinary/AWS setup
+├── controllers/        # Handles HTTP requests, extracts data, calls services
+├── middlewares/        # Auth (JWT), validation, error handling, logging
+├── models/             # Mongoose schemas/models (Database structure)
+├── routes/             # API route definitions (Endpoints)
+├── services/           # CORE BUSINESS LOGIC (Complex math, external API calls)
+├── utils/              # Helper functions (Formatters, constants, email templates)
+├── validatons/         # Input validation (Joi or Zod schemas)
+├── app.js              # Express app setup (Middlewares, CORS, routes)
+└── server.js           # Entry point (Starting the server, DB connection)
+.env                    # Sensitive environment variables
+.gitignore              # Files to exclude from Git
+package.json            # Scripts and dependencies
+============================
+
+
+
+
+1) establish server for socket.io(lib for backend)
+2) establish mongoDB
+3) build login, signup, auth middlewares
+4) build search user
+5) build invite group users api
+6) build invite single user api

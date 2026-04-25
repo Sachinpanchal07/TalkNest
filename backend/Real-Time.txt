@@ -1,0 +1,148 @@
+Real-Time Chat Application
+1. Introduction
+1.1 Purpose
+
+This document defines the requirements for a Real-Time Chat Application that allows authenticated users to communicate through private and group messaging. The system supports real-time communication, offline message synchronization, invitation management, and message status tracking.
+
+1.2 Scope
+
+The application will provide the following capabilities:
+Secure user authentication
+User discovery through search
+Private messaging between users
+Group conversations
+Message delivery status
+Offline message synchronization
+In-app user invitations with notification support
+The frontend will be developed using React with TypeScript to ensure maintainability and scalability.
+
+2. User Discovery and Invitation
+2.1 User Discovery
+The system shall provide a user discovery feature allowing users to find other users within the platform.
+Functional Requirements
+Users should be able to search using:
+Email address
+Phone number
+User name
+
+Additional requirements:
+
+A search bar must be available within the application interface.
+Partial search queries should be supported.
+Matching users should be displayed in a result list.
+Users should be able to initiate private chat directly from search results.
+
+2.2 In-App User Invitation
+
+The system shall allow users to invite other users to connect through the platform.
+Functional Requirements
+Users should be able to send an invitation using:
+Email
+Phone number
+Username (if registered)
+Invitations must appear as in-app notifications to the recipient.
+
+The recipient must be able to:
+Accept the invitation
+Reject the invitation
+Invitation Notification
+When an invitation is sent, the recipient should receive a notification within the application interface.
+
+The notification should include:
+Sender information
+Accept option
+Reject option
+
+Invitation Acceptance
+If the recipient accepts the invitation:
+Both users should be automatically connected.
+They should be able to start a private chat immediately.
+
+Invitation Rejection
+If the recipient rejects the invitation:
+The sender should receive a notification indicating that the invitation was rejected.
+The sender must not be allowed to send another invitation to the same user for the next 24 hours.
+
+Invitation Restriction
+
+To prevent spam:
+The system should enforce a 24-hour cooldown period after an invitation rejection.
+During this cooldown period, the sender cannot send another invitation to the same user.
+
+3. Authentication
+
+The system shall provide secure authentication for all users.
+Functional Requirements
+Only registered users may access the chat application.
+Users must authenticate using valid credentials.
+Sessions should remain active until the user logs out.
+Unauthorized access to chat features should be prevented.
+
+4. Private Chat
+
+The system shall support one-to-one messaging.
+Functional Requirements
+Users should be able to start private conversations.
+Messages should be delivered in real time.
+Chat history should be visible within the conversation window.
+Both sender and recipient should see messages instantly.
+
+5. Group Chat
+
+The system shall support group messaging.
+Functional Requirements
+Users should be able to create groups.
+Users should be able to add members to groups.
+Messages sent in the group should be visible to all members.
+Group chat history should be accessible to all participants.
+
+6. Message Received Status
+
+The system shall display message delivery status.
+Functional Requirements
+The sender should see status indicators such as:
+Sent
+Received
+The received status should update automatically once the recipient receives the message.
+
+7. Offline Message Support
+
+The system should support message delivery when users are offline.
+Functional Requirements
+Messages sent to offline users should be stored by the system.
+The system should maintain a pending message queue.
+Once the user reconnects to the internet, pending messages should automatically synchronize.
+Users should be able to view messages sent during their offline period.
+
+8. Technical Requirements
+8.1 Frontend
+
+The frontend must be implemented using:
+
+React
+TypeScript
+The frontend should support:
+Component-based architecture
+Real-time message updates
+State management for chat sessions
+Responsive design
+
+8.2 Real-Time Communication
+The system should support real-time messaging using technologies such as:
+WebSockets
+Socket.IO
+
+Real-time event streaming mechanisms
+
+9. Non-Functional Requirements
+Performance
+Message delivery latency should be minimal.
+Security
+Authentication must be secure.
+Communication should be encrypted.
+
+Scalability
+The system should support a large number of concurrent users.
+Reliability
+
+Messages should be persisted to prevent loss.
