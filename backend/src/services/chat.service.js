@@ -1,3 +1,6 @@
+import Chat from "../models/chat.model.js";
+import Message from "../models/message.model.js";
+
 export const getOrCreateChat = async (senderId, receiverId) => {
     // Find a private chat where both are participants
     let chat = await Chat.findOne({
@@ -15,7 +18,7 @@ export const getOrCreateChat = async (senderId, receiverId) => {
 };
 
 export const saveMessage = async (chatId, senderId, text) => {
-    return await Message.create({ chatId, sender, senderId, text });
+    return await Message.create({ chatId, senderId, text });
 };
 
 export const getChatMessages = async (chatId) => {

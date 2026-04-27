@@ -22,6 +22,7 @@ export async function signupController(req, res, next){
     res.status(201).json({
       success: true,
       message: "Registration successful",
+      user
     });
 
   } catch (error) {
@@ -55,6 +56,7 @@ export async function loginController(req, res, next) {
     res.status(200).json({
       success: true,
       message: "Login successful",
+      user
     });
   } catch (error) {
     next(error);

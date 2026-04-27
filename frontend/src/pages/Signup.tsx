@@ -22,7 +22,8 @@ const Signup: React.FC = () => {
         { userName, email, password, avatar },
         { withCredentials: true },
       );
-      console.log("Success:", res);
+      // console.log("Success:", res);
+      localStorage.setItem("userId", res.data.user._id);
       navigate('/home')
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

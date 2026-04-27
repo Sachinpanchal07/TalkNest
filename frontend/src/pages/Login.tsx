@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { URL } from '../config/constant';
 import axios from 'axios';
 import Loader from '../components/Loader';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Login: React.FC = () => {
@@ -22,6 +22,7 @@ const Login: React.FC = () => {
                 {  email, password },
                 { withCredentials: true }
             );
+            localStorage.setItem("userId", res.data.user._id);
             console.log("Success:", res);
             navigate("/home")
         } catch (err) {
