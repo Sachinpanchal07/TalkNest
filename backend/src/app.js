@@ -5,8 +5,12 @@ import cookieParser from 'cookie-parser';
 import { signupController } from "./controllers/auth.controller.js";
 import  authRouter  from "./routes/auth.routes.js";
 import userRouter from "./routes/user.route.js";
+import http from 'http';
+import {Server} from 'socket.io';
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer);
 
 app.use(cors({
     credentials : true,
@@ -21,4 +25,4 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 
-export default app;
+export default httpServer;

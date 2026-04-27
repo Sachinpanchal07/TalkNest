@@ -21,6 +21,7 @@ const Home: React.FC = () => {
       const res: any = await axios.post(`${URL}/api/user/search`, { query: inviteData }, { withCredentials: true });
       
       setSearchResults(res.data.users); 
+      console.log(res.data.users)
       if(res.data.length === 0) {
         toast.info("No users found.");
       }
@@ -56,15 +57,24 @@ const Home: React.FC = () => {
         <div className="lg:col-span-4 space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
             <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
-            <button 
-              onClick={() => navigate('/chat')}
-              className="w-full group flex items-center justify-between bg-blue-600 p-4 rounded-xl text-white font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100"
-            >
-              <span>Go to Messages</span>
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-            </button>
-          </div>
+            <div className="space-y-3">
+              <button 
+                onClick={() => navigate('/chat')}
+                className="w-full group flex items-center justify-between bg-blue-600 p-4 rounded-xl text-white font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100"
+              >
+                <span>Go to Messages</span>
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+              </button>
 
+              <button 
+                onClick={() => navigate('/invitations')}
+                className="w-full group flex items-center justify-between bg-gray-50 p-4 rounded-xl text-gray-700 border border-gray-200 font-semibold hover:bg-gray-100 transition-all"
+              >
+                <span>My Invitations</span>
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* right column search and results */}

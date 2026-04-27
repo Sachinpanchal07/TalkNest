@@ -14,15 +14,15 @@ interface UserProps {
 
 const SearchedUser: React.FC<UserProps> = ({ user }) => {
   const navigate = useNavigate();
-  const [invitedUsers, setInvitedUsers] = useState<Array<string>>([]);
+  // const [invitedUsers, setInvitedUsers] = useState<Array<string>>([]);
 
 
-  async function handleInvite():Promise<void>{
+  async function handleInvite(searchUserId : string):Promise<void>{
         try{
-            if(!invitedUsers){
+            if(!searchUserId){
                 toast.error("Please invite some users");
             }
-            const res = axios.post(`${URL}/api/user/invite`, {invitedUsers}, {withCredentials:true});
+            const res = await axios.post(`${URL}/api/user/invite`, {searchUserId}, {withCredentials:true});
             console.log(res);
         }catch(err){
             console.log("Error in invite :", err);
@@ -49,7 +49,7 @@ const SearchedUser: React.FC<UserProps> = ({ user }) => {
       </div>
 
       <button
-        onClick={handleInvite}
+        onClick={()=>handleInvite(user._id)}
         className=" text-blue-500 px-5 py-2 rounded-xl text-xs font-bold active:scale-95 transition-all cursor-pointer shadow-sm shadow-blue-100"
       >
         Invite
