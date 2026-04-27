@@ -10,7 +10,29 @@ import {Server} from 'socket.io';
 
 const app = express();
 const httpServer = http.createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"]
+    }
+});
+
+const userSocketMap = {}; // { userId: socketId }
+
+io.on("connection", (socket) => {
+    const userId = socket.handshake.query.userId;
+    if (userId !== "undefined") userSocketMap[userId] = socket.id;
+
+    // Tell everyone who is online
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+    socket.on("disconnect", () => {
+        delete userSocketMap[userId];
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    });
+
+    // We will add the "send_message" listener here later
+});
 
 app.use(cors({
     credentials : true,

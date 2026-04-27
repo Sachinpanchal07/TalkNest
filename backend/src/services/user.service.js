@@ -135,3 +135,18 @@ export async function getReceivedInvites(userId) {
     throw new Error("Could not fetch invitations");
   }
 }
+
+// fecthc all user connections
+export const getConnectedUsers = async (userId) => {
+    // Find invites where current user is either 'from' or 'to' AND status is 'accepted'
+    const connections = await Invitation.find({
+        status: "accepted",
+        $or: [{ from: userId }, { to: userId }]
+    }).populate("from to", "username avatar isOnline");
+
+    // Filter out the current user from the results
+    console.log(connections);
+    return connections.map(invite => {
+        return invite.from._id.toString() === userId.toString() ? invite.to : invite.from;
+    });
+};

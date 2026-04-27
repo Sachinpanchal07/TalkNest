@@ -1,4 +1,4 @@
-import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites} from "../services/user.service.js"
+import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers} from "../services/user.service.js"
 
 // Search User
 export async function userSearchController(req, res, next) {
@@ -99,4 +99,18 @@ export async function getInvitesController(req, res) {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+}
+
+// get user connections
+
+export async function getConnectionsController(req, res){
+    try{
+        const userId = req.user._id;
+        const connections = await getConnectedUsers(userId);
+        res.status(200).json({connections});
+        
+    }catch(err){
+        console.log(err)
+        throw new Error(err);
+    }
 }

@@ -28,4 +28,5 @@ package.json            # Scripts and dependencies
 4) build search user
 5) build invite group users api
 6) build invite single user api
-7) doing accept or reject invitation api
+7) build accept or reject invitation api
+8)
