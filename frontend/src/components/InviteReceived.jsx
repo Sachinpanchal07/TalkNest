@@ -1,23 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { URL } from '../config/constant';
 
-interface Invitation {
-  _id: string;
-  from: {
-    _id: string;
-    username: string;
-    avatar?: string;  
-  };
-  status: 'pending' | 'accepted' | 'rejected';
-  createdAt: string;
-}
-
-const Invitations: React.FC = () => {
+const InviteReceived = () => {
   const navigate = useNavigate();
-  const [invites, setInvites] = useState<Invitation[]>([]);
+  const [invites, setInvites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchInvites = async () => {
@@ -26,7 +15,7 @@ const Invitations: React.FC = () => {
       const res = await axios.get(`${URL}/api/user/invite/received`, { withCredentials: true });
       setInvites(res.data.data);
       console.log(res.data.data);
-    } catch (err: any) {
+    } catch {
       toast.error("Failed to load invitations.");
     } finally {
       setLoading(false);
@@ -37,12 +26,12 @@ const Invitations: React.FC = () => {
     fetchInvites();
   }, []);
 
-  const handleReview = async (requestId: string, status: 'accepted' | 'rejected') => {
+  const handleReview = async (requestId, status) => {
     try {
       await axios.post(`${URL}/api/user/invite/review`, { requestId, status }, { withCredentials: true });
       toast.success(`Request ${status}!`);
       fetchInvites(); 
-    } catch (err: any) {
+    } catch (err) {
       toast.error(err.response?.data?.message || "Action failed.");
     }
   };
@@ -55,7 +44,7 @@ const Invitations: React.FC = () => {
              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
            </svg>
         </button>
-        <h1 className="text-xl font-bold text-gray-800">Connection Requests</h1>
+        <h1 className="text-xl font-bold text-gray-800">Received Requests</h1>
       </header>
 
       <main className="max-w-3xl mx-auto mt-8 px-6">
@@ -125,4 +114,4 @@ const Invitations: React.FC = () => {
   );
 };
 
-export default Invitations;
+export default InviteReceived;

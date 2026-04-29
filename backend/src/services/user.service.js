@@ -136,7 +136,7 @@ export async function getReceivedInvites(userId) {
   }
 }
 
-// fecthc all user connections
+// fetch all user connections
 export const getConnectedUsers = async (userId) => {
     // Find invites where current user is either 'from' or 'to' AND status is 'accepted'
     const connections = await Invitation.find({
@@ -149,4 +149,17 @@ export const getConnectedUsers = async (userId) => {
     return connections.map(invite => {
         return invite.from._id.toString() === userId.toString() ? invite.to : invite.from;
     });
+};
+
+// sent invites fetch
+export const getSentInvitesService = async (userId) => {
+    try {
+        const invites = await Invitation.find({ from: userId })
+            .populate("to", "username avatar email") 
+            .sort({ createdAt: -1 });
+
+        return invites;
+    } catch (error) {
+        throw new Error("Error in fetching sent invites service: " + error.message);
+    }
 };

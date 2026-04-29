@@ -7,7 +7,7 @@ export const userAuth = async (req, res, next) => {
         const {token} = req.cookies;
         // console.log("In userAuth middlweare", token)
         if(!token){
-            return res.status(401).send("Please login");
+            return res.status(401).json({message: "Please login"});
             console.log("token not found")
         }
         const decodedObj = jwt.verify(token, process.env.JWT_SECRET);

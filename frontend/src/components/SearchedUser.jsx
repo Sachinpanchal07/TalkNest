@@ -1,23 +1,12 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { URL } from '../config/constant';
 import { toast } from 'react-toastify';
 
-interface UserProps {
-  user: {
-    _id: string;
-    username: string;
-    email: string;
-  };
-}
-
-const SearchedUser: React.FC<UserProps> = ({ user }) => {
-  const navigate = useNavigate();
-  // const [invitedUsers, setInvitedUsers] = useState<Array<string>>([]);
+const SearchedUser = ({ user }) => {
+  // const [invitedUsers, setInvitedUsers] = useState([]);
 
 
-  async function handleInvite(searchUserId : string):Promise<void>{
+  async function handleInvite(searchUserId){
         try{
             if(!searchUserId){
                 toast.error("Please invite some users");

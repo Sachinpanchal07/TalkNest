@@ -23,11 +23,11 @@ export const registerUser = async ({ username, email, password, avatar }) => {
     });
   
      // generate JWT
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    //   expiresIn: "7d",
+    // });
   
-    return { user: newUser, token };
+    return { user: newUser };
   }catch(err){
     console.log("Error in service :", err);
     throw err;

@@ -1,54 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { URL } from '../config/constant';
+import { useUser } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
 
-const Chat: React.FC = () => {
-    const [selectedUser, setSelectedUser] = useState<any>(null);
-    const [connections, setConnections] = useState<any[]>([]);
+const Chat = () => {
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [connections, setConnections] = useState([]);
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState<any[]>([]);
-    const socket = React.useRef<any>(null);
-    const selectedUserRef = React.useRef<any>(null);
-    const currentUser = localStorage.getItem("userId");
-    const getSenderId = (msg: any) => {
+    const [messages, setMessages] = useState([]);
+    const [socket, setSocket] = useState(null);
+    const { user : currentUser  } = useUser();
+    // const currentUser = JSON.parse(localStorage.getItem("user") || "null")
+    const navigate = useNavigate();
+    // console.log(currentUser);
+
+    const getSenderId = (msg) => {
         if (!msg) return "";
         if (typeof msg.senderId === "string") return msg.senderId;
         if (msg.senderId?._id) return msg.senderId._id;
-        if (typeof msg.sender === "string") return msg.sender;
-        if (msg.sender?._id) return msg.sender._id;
         return "";
     };
 
-    useEffect(() => {
-        selectedUserRef.current = selectedUser;
-    }, [selectedUser]);
+    // make connection
+    useEffect(() => { 
+        if (!currentUser) return;
 
-    useEffect(() => {
-      socket.current = io(URL, {
-          query: { userId: currentUser }
-      });
+        const newSocket = io(URL, {
+            query: { userId: currentUser._id }
+        });
+        setSocket(newSocket);
+        console.log("this is socket", newSocket);
 
-      socket.current.on("newMessage", (msg: any) => {
-          const incomingSenderId = getSenderId(msg);
-          setMessages((prev) => {
-              if (selectedUserRef.current && incomingSenderId === selectedUserRef.current._id) {
-                  return [...prev, msg];
-              }
-              return prev;
-          });
-      });
-
-      socket.current.on("messageSent", (savedMessage: any) => {
-          setMessages((prev) =>
-              prev.map((msg) =>
-                  msg.tempId && msg.tempId === savedMessage.tempId ? savedMessage : msg
-              )
-          );
-      });
-
-      return () => socket.current.disconnect();
+        return () => {
+            newSocket.disconnect();
+        };
     }, [currentUser]);
+
+
+    useEffect(() => {
+        if (!socket) return;
+        const handleNewMessage = (msg) => {
+            if (selectedUser && getSenderId(msg) === selectedUser._id) {
+                setMessages((prev) => [...prev, msg]);
+            }
+        };
+        const handleMessageSent = (savedMessage) => {
+            if (selectedUser && savedMessage.receiverId === selectedUser._id) {
+                setMessages((prev) => [...prev, savedMessage]);
+            }
+        };
+        socket.on("newMessage", handleNewMessage);
+        socket.on("messageSent", handleMessageSent); // for loggedIn user
+
+        return () => {
+            socket.off("newMessage", handleNewMessage);
+            socket.off("messageSent", handleMessageSent);
+        };
+    }, [socket, selectedUser]);
 
     // fetch old messages
     useEffect(() => {
@@ -63,29 +73,23 @@ const Chat: React.FC = () => {
     useEffect(() => {
         const fetchConnections = async () => {
             const res = await axios.get(`${URL}/api/user/connections`, { withCredentials: true });
-            console.log(res);
+            console.log("these are connections", res);
             setConnections(res.data.connections);
         };
         fetchConnections();
     }, []);
 
     const handleSend = () => {
-      if (!message.trim() || !selectedUser) return;
+        if (!message.trim() || !selectedUser || !socket) return;
 
-      const tempId = `${Date.now()}-${currentUser}`;
-      const msgData = {
-          senderId: currentUser,
-          receiverId: selectedUser._id,
-          text: message,
-          tempId
-      };
+        const msgData = {
+            senderId: currentUser._id,
+            receiverId: selectedUser._id,
+            text: message
+        };
 
-      // Send via Socket for instant delivery
-      socket.current.emit("sendMessage", msgData);
-
-      // Update my own screen instantly
-      setMessages((prev) => [...prev, msgData]);
-      setMessage("");
+        socket.emit("sendMessage", msgData);
+        setMessage("");
     };
 
     return (
@@ -94,6 +98,9 @@ const Chat: React.FC = () => {
             <div className="w-1/4 bg-white border-r border-gray-200 flex flex-col">
                 <div className="p-4 border-b border-gray-200">
                     <h1 className="text-xl font-bold text-gray-800">Messages</h1>
+                </div>
+                <div className="p-4 border-b border-gray-200">
+                    <h1 onClick={()=>navigate("/groups")} className="text-lg font-semibold text-gray-800 cursor-pointer">Groups</h1>
                 </div>
                 <div className="overflow-y-auto flex-1">
                     {connections.map((user) => (
@@ -125,11 +132,11 @@ const Chat: React.FC = () => {
                         <div className="flex-1 p-6 overflow-y-auto bg-[#f0f2f5]">
                             <div className="flex flex-col gap-2">
                                 {messages.map((msg, index) => {
-                                    const isCurrentUser = getSenderId(msg) === currentUser;
+                                    const isCurrentUser = getSenderId(msg) === currentUser._id;
 
                                     return (
                                         <div
-                                            key={msg._id || msg.tempId || index}
+                                            key={msg._id || index}
                                             className={`max-w-xs rounded-lg p-3 shadow-sm ${
                                                 isCurrentUser
                                                     ? 'self-end bg-blue-600 text-white'

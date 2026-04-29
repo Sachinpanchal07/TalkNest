@@ -1,32 +1,32 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { URL } from '../config/constant';
 import SearchedUser from '../components/SearchedUser';
 
-const Home: React.FC = () => {
+const Home = () => {
   const navigate = useNavigate();
-  const [inviteData, setInviteData] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<any[]>([]); 
+  const [inviteData, setInviteData] = useState("");
+  const [searchResults, setSearchResults] = useState([]); 
   const [isSearching, setIsSearching] = useState(false);
 
-  async function handleSearch(): Promise<void> {
+  async function handleSearch() {
     if (!inviteData) {
       toast.error("Please enter a username or email.");
       return;
     }
     try {
       setIsSearching(true);
-      const res: any = await axios.post(`${URL}/api/user/search`, { query: inviteData }, { withCredentials: true });
+      const res = await axios.post(`${URL}/api/user/search`, { query: inviteData }, { withCredentials: true });
       
       setSearchResults(res.data.users); 
       console.log(res.data.users)
       if(res.data.length === 0) {
         toast.info("No users found.");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      console.log("error in searching");
       toast.error("Search failed.");
     } finally {
       setIsSearching(false);
@@ -35,21 +35,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center">
-      {/* Navbar */}
-      <header className="w-full bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
-        <div className="flex items-center gap-2">
-          <div className="bg-blue-600 p-2 rounded-lg">
-             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
-          </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">TalkNest</h1>
-        </div>
-        <button 
-          onClick={() => navigate('/login')} 
-          className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all border border-transparent hover:border-red-100"
-        >
-          Logout
-        </button>
-      </header>
 
       <main className="w-full max-w-6xl mt-8 px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12">
         

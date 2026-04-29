@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { URL } from '../config/constant';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useUser } from '../context/UserContext';
 
-const Login: React.FC = () => {
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
+const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { setUser } = useUser();
 
-    async function submitHandler(): Promise<void> {
+    async function submitHandler() {
         try {
             setLoading(true);
             if(!email || !password){
                 toast.error("Please enter required fields")
                 return;
             }
-            const res : any = await axios.post(`${URL}/api/auth/login`, 
+            const res = await axios.post(`${URL}/api/auth/login`, 
                 {  email, password },
                 { withCredentials: true }
             );
-            localStorage.setItem("userId", res.data.user._id);
-            console.log("Success:", res);
+            setUser(res.data.user);
             navigate("/home")
         } catch (err) {
-            console.error("Login Error:", err);
+            toast.error(err.response.data.message)
         } finally{
             setLoading(false)
         };

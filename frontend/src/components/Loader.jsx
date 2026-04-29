@@ -1,6 +1,4 @@
-import React from 'react'
-
-const Loader : React.FC = () => {
+const Loader = () => {
   return (
     <div className='text-blue-500'>
         Loading...

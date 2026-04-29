@@ -10,7 +10,7 @@ export async function signupController(req, res, next){
         message: "Please provide username, email, password" 
       });
     }
-    const { user, token } = await registerUser({
+    const { user } = await registerUser({
       username,
       email,
       password,
@@ -59,6 +59,26 @@ export async function loginController(req, res, next) {
       user
     });
   } catch (error) {
+    res.status(400).json({message : error.message})
     next(error);
   }
+}
+
+// logout
+export function logoutController(req, res) {
+    try {
+        res.cookie("token", "");
+        console.log("In logout service")
+
+        return res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        console.error("Logout Error:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
 }

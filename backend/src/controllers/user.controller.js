@@ -1,11 +1,11 @@
-import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers} from "../services/user.service.js"
+import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers, getSentInvitesService} from "../services/user.service.js"
 
 // Search User
 export async function userSearchController(req, res, next) {
     try{
         console.log("In user serach constorler")
         const { query } = req.body;
-        console.log(query, "query")
+        // console.log(query, "query")
         if(!query){
             return res.status(400).json({message : "Search query is required"})
         }
@@ -102,7 +102,6 @@ export async function getInvitesController(req, res) {
 }
 
 // get user connections
-
 export async function getConnectionsController(req, res){
     try{
         const userId = req.user._id;
@@ -112,5 +111,27 @@ export async function getConnectionsController(req, res){
     }catch(err){
         console.log(err)
         throw new Error(err);
+    }
+}
+
+// invite sent
+export async function sentInvitesController(req, res) {
+    try {
+        // req.user.id comes from your protect/auth middleware
+        const userId = req.user.id; 
+
+        const invitations = await getSentInvitesService(userId);
+
+        return res.status(200).json({
+            success: true,
+            count: invitations.length,
+            invitations
+        });
+    } catch (error) {
+        console.error("Sent Invites Error:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch sent invitations"
+        });
     }
 }

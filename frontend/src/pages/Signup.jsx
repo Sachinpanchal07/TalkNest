@@ -1,31 +1,31 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { URL } from "../config/constant";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Signup: React.FC = () => {
-  const [userName, setUserName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [avatar, setAvatar] = useState<string>("");
+const Signup = () => {
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
   const navigate = useNavigate();
 
-  async function submitHandler(): Promise<void> {
+  async function submitHandler() {
     try {
       if (!userName || !email || !password || !avatar) {
         toast.error("Please enter required fields !");
         return;
       }
-      const res : any = await axios.post(
+      const res = await axios.post(
         `${URL}/api/auth/signup`,
         { userName, email, password, avatar },
         { withCredentials: true },
       );
-      // console.log("Success:", res);
-      localStorage.setItem("userId", res.data.user._id);
-      navigate('/home')
-    } catch (error: unknown) {
+      console.log("Success:", res);
+      // localStorage.setItem("userId", res.data.user._id);
+      navigate('/login')
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const msg = error.response?.data?.message || "Signup failed";
         toast.error(msg);

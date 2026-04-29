@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Landing: React.FC = () => {
+const Landing = () => {
   return (
     <div className="h-screen w-full bg-gray-50 flex flex-col items-center justify-center text-gray-900">
       

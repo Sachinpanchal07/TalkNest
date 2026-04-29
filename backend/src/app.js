@@ -1,5 +1,4 @@
-import express, { urlencoded } from "express"
-import { Router } from "express";
+import express from "express"
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { getOrCreateChat } from "./services/chat.service.js";
@@ -38,7 +37,7 @@ io.on("connection", (socket) => {
     });
 
     // sendMessage listner
-    socket.on("sendMessage", async ({ senderId, receiverId, text, tempId }) => {
+    socket.on("sendMessage", async ({ senderId, receiverId, text }) => {
         try {
         const chat = await getOrCreateChat(senderId, receiverId);
 
@@ -51,7 +50,7 @@ io.on("connection", (socket) => {
 
         const savedMessage = {
             ...newMessage.toObject(),
-            tempId
+            receiverId
         };
 
         // Send to Receiver if they are online

@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
         default : false,
     },
     avatar : String, 
+    lastseen : Number
 }, {timestamps : true});
 
 const User = mongoose.model("User", userSchema);
