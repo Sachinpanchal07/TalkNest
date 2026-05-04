@@ -100,7 +100,7 @@ const Chat = () => {
                     <h1 className="text-xl font-bold text-gray-800">Messages</h1>
                 </div>
                 <div className="p-4 border-b border-gray-200">
-                    <h1 onClick={()=>navigate("/groups")} className="text-lg font-semibold text-gray-800 cursor-pointer">Groups</h1>
+                    <h1 onClick={()=>navigate("/groups")} socket = {socket} className="text-lg font-semibold text-gray-800 cursor-pointer">Groups</h1>
                 </div>
                 <div className="overflow-y-auto flex-1">
                     {connections.map((user) => (
@@ -109,7 +109,7 @@ const Chat = () => {
                             onClick={() => setSelectedUser(user)}
                             className={`flex items-center gap-3 p-4 cursor-pointer transition-all hover:bg-blue-50 ${selectedUser?._id === user._id ? 'bg-blue-50 border-r-4 border-blue-600' : ''}`}
                         >
-                            {/* <img src={user.avatar || "https://ui-avatars.com/api/?name="+user.username} className="w-12 h-12 rounded-full" /> */}
+                            <img src={user.avatar || "https://ui-avatars.com/api/?name="+user.username} className="w-12 h-12 rounded-full" />
                             <div>
                                 <h3 className="font-semibold text-gray-800">{user.username}</h3>
                                 {/* <p className="text-xs text-green-500">Online</p> */}
@@ -125,7 +125,7 @@ const Chat = () => {
                     <>
                         {/* Chat Header */}
                         <div className="p-4 border-b border-gray-200 flex items-center gap-3">
-                             {/* <img src={selectedUser.avatar || "https://ui-avatars.com/api/?name="+selectedUser.username} className="w-10 h-10 rounded-full" /> */}
+                             <img src={selectedUser.avatar || "https://ui-avatars.com/api/?name="+selectedUser.username} className="w-10 h-10 rounded-full" />
                              <h2 className="font-bold">{selectedUser.username}</h2>
                         </div>
 

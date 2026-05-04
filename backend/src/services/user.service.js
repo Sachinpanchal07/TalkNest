@@ -2,21 +2,27 @@ import User from "../models/user.model.js";
 import Invitation from "../models/invitation.model.js";
 
 // Search random Users
-export async function findUsersByQuery(query) {
+export async function findUsersByQuery(query, currentUserId) {
   try {
     const searchRegex = new RegExp(query, "i");
 
     const users = await User.find({
-      $or: [
-        { username: { $regex: searchRegex } },
-        { email: { $regex: searchRegex } },
+      $and: [
+        { _id: { $ne: currentUserId } }, 
+        {
+          $or: [
+            { username: { $regex: searchRegex } },
+            { email: { $regex: searchRegex } },
+          ],
+        },
       ],
     }).select("-password");
-    console.log(users);
+
+    console.log("Filtered Users:", users);
     return users;
   } catch (err) {
     console.log("Error in find user service: ", err);
-    throw err; // Re-throw so the controller can handle the response
+    throw err;
   }
 }
 
@@ -162,4 +168,11 @@ export const getSentInvitesService = async (userId) => {
     } catch (error) {
         throw new Error("Error in fetching sent invites service: " + error.message);
     }
+};
+
+// get all invite service
+export const getSentInvitationsService = async (userId) => {
+    // We only need the 'to' field (the ID of the user who received the invite)
+    const invitations = await Invitation.find({ from: userId }).select("to status");
+    return invitations;
 };

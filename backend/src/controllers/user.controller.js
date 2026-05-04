@@ -1,15 +1,16 @@
-import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers, getSentInvitesService} from "../services/user.service.js"
+import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers, getSentInvitesService, getSentInvitationsService} from "../services/user.service.js"
 
 // Search User
 export async function userSearchController(req, res, next) {
     try{
         console.log("In user serach constorler")
         const { query } = req.body;
+        const userId = req.user._id;
         // console.log(query, "query")
         if(!query){
             return res.status(400).json({message : "Search query is required"})
         }
-        const users = await findUsersByQuery(query);
+        const users = await findUsersByQuery(query, userId);
         res.status(200).json({users})
 
     }catch(err){
@@ -61,7 +62,8 @@ export async function singleUserInviteController(req, res, next){
         res.status(200).json({"message":"Invite sent successfully", "success" : "true"});
     }catch(err){
         console.log("Error in invite controller:", err)
-        throw Error(err.message);
+        res.status(400).json({"success" : "false", "message" : err.message});
+        // throw Error(err.message);
     }
 }
 
@@ -135,3 +137,21 @@ export async function sentInvitesController(req, res) {
         });
     }
 }
+
+// get all invitations
+export const getAllInvitations = async (req, res) => {
+    try {
+        const userId = req.user._id; 
+        const invitations = await getSentInvitationsService(userId);
+        
+        const invitedUserIds = invitations.map(inv => inv.to.toString());
+        
+        res.status(200).json({
+            success: true,
+            invitedUserIds
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch invitations" });
+    }
+};
+

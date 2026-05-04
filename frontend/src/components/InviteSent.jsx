@@ -20,6 +20,7 @@ const InviteSent = () => {
         
         if (res.data.success) {
           setInvites(res.data.invitations);
+          console.log(res.data.invitations)
         }
       } catch (err) {
         console.error("Error fetching sent invites:", err);

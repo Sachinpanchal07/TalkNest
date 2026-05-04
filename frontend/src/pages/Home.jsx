@@ -1,15 +1,16 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { URL } from '../config/constant';
 import SearchedUser from '../components/SearchedUser';
 
-const Home = () => {
+const Home = () => {  
   const navigate = useNavigate();
   const [inviteData, setInviteData] = useState("");
   const [searchResults, setSearchResults] = useState([]); 
   const [isSearching, setIsSearching] = useState(false);
+  const [invitedIds, setInvitedIds] = useState([]);
 
   async function handleSearch() {
     if (!inviteData) {
@@ -25,6 +26,7 @@ const Home = () => {
       if(res.data.length === 0) {
         toast.info("No users found.");
       }
+      
     } catch {
       console.log("error in searching");
       toast.error("Search failed.");
@@ -32,6 +34,18 @@ const Home = () => {
       setIsSearching(false);
     }
   }
+
+  useEffect(() => {
+    const fetchInvitedList = async () => {
+        try {
+            const res = await axios.get(`${URL}/api/user/invitations`, { withCredentials: true });
+            setInvitedIds(res.data.invitedUserIds);
+        } catch (err) {
+            console.error("Error fetching invites", err);
+        }
+    };
+    fetchInvitedList();
+}, []);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center">
@@ -101,7 +115,7 @@ const Home = () => {
             <div className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
               {searchResults.length > 0 ? (
                 searchResults.map((user) => (
-                      <SearchedUser key={user._id} user={user}></SearchedUser>
+                      <SearchedUser key={user._id} user={user} isAlreadyInvited={invitedIds.includes(user._id)}></SearchedUser>
                 ))
               ) : (
                 <div className="p-12 text-center">
@@ -111,7 +125,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-
       </main>
     </div>
   );
