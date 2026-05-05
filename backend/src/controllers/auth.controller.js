@@ -17,7 +17,7 @@ export async function signupController(req, res, next){
       avatar,
     });
 
-    // console.log(user, "user")
+    // (user, "user")
 
     res.status(201).json({
       success: true,
@@ -26,8 +26,8 @@ export async function signupController(req, res, next){
     });
 
   } catch (error) {
-    console.log("Error in controller: smtg");
-    console.log(error.message)
+    ("Error in controller: smtg");
+    (error.message)
 
     res.status(400).json({
       "success ": false,
@@ -47,7 +47,7 @@ export async function loginController(req, res, next) {
         message: "Please provide both email and password",
       });
     }
-    // console.log(email, password)
+    // (email, password)
     const { user, token } = await loginUser({ email, password });
     res.cookie('token', token, {
       httpOnly : true
@@ -68,7 +68,7 @@ export async function loginController(req, res, next) {
 export function logoutController(req, res) {
     try {
         res.cookie("token", "");
-        console.log("In logout service")
+        ("In logout service")
 
         return res.status(200).json({
             success: true,

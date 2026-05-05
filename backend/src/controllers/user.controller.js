@@ -3,8 +3,9 @@ import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatu
 // Search User
 export async function userSearchController(req, res, next) {
     try{
-        console.log("In user serach constorler")
+        // console.log("In user serach constorler")
         const { query } = req.body;
+        console.log("query comming from clint, in user search controller", query);
         const userId = req.user._id;
         // console.log(query, "query")
         if(!query){
@@ -23,14 +24,14 @@ export async function usersInviteController(req, res, next) {
     try {
         const { receivierId } = req.body; 
         console.log(receivierId, receivierId.length)
-        // const senderId = req.user._id;
-        const senderId = "69e9e097a403e62d33deed3c";
+        const senderId = req.user._id;
+        // const senderId = "69e9e097a403e62d33deed3c";
 
         if (!receivierId || (Array.isArray(receivierId) && receivierId.length === 0)) {
             return res.status(400).json({ message: "Receiver ID is required" });
         }
         const result = await sendInviteReq(receivierId, senderId);
-        console.log(result)
+        // console.log(result)
 
         if (result.details.length === 0) {
             return res.status(403).json({ 
@@ -88,10 +89,10 @@ export async function reviewInviteController(req, res) {
   }
 }
 
-// get invites for review
+// get received invites for review
 export async function getInvitesController(req, res) {
   try {
-    const userId = req.user._id; // Get ID from userAuth middleware
+    const userId = req.user._id; 
     const invites = await getReceivedInvites(userId);
 
     res.status(200).json({
@@ -109,7 +110,6 @@ export async function getConnectionsController(req, res){
         const userId = req.user._id;
         const connections = await getConnectedUsers(userId);
         res.status(200).json({connections});
-        
     }catch(err){
         console.log(err)
         throw new Error(err);
@@ -155,3 +155,4 @@ export const getAllInvitations = async (req, res) => {
     }
 };
 
+// serach in connections to add in group

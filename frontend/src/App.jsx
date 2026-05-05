@@ -12,11 +12,27 @@ import { useUser } from './context/UserContext'
 import { Navigate } from 'react-router-dom'
 import InviteSent from './components/InviteSent'
 import InviteReceived from './components/InviteReceived'
+import { useEffect } from 'react'
+import { io } from "socket.io-client";
+import { URL } from './config/constant'
+
 
 
 function App() {
   
-  const { user } = useUser();
+  const { user, socket, setUserSocket } = useUser();
+
+  useEffect(() => {
+    if (user) {
+        const newSocket = io(URL, {
+            query: { userId: user._id }
+        });
+        
+        setUserSocket(newSocket); 
+
+        return () => newSocket.disconnect();
+    }
+}, [user]);
 
   return (
     <>

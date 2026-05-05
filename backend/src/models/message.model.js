@@ -22,7 +22,7 @@ const messageSchema = new mongoose.Schema({
         enum : ["sent", "delivered", "seen"],
         default : 'sent'
     }
-});
+},{timestamps : true});
 
 const Message = mongoose.model("Message", messageSchema);
 export default Message;

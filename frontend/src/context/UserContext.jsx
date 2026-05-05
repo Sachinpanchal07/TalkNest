@@ -6,6 +6,7 @@ export const UserProvider = ({ children }) => {
     const savedData = localStorage.getItem("user");
     const initialUser = savedData ? JSON.parse(savedData) : null;
     const [user, setUserState] = useState(initialUser);
+    const [socket, setSocket] = useState(null);
 
     const setUser = (userData) => {
         setUserState(userData);
@@ -18,13 +19,18 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    // set the socket
+    const setUserSocket = (newSocket)=>{
+        setSocket(newSocket);
+    }
+
     const isAuthenticated = ()=>{
         if(user) return true;
         return false;
     }
 
     return (
-        <UserContext.Provider value={{ user, setUser, isAuthenticated }}>
+        <UserContext.Provider value={{ user, setUser, isAuthenticated, socket, setUserSocket }}>
             {children}
         </UserContext.Provider>
     );

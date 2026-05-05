@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { URL } from '../config/constant';
+import { toast } from 'react-toastify';
 
 const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     const [groupName, setGroupName] = useState("");
@@ -8,22 +9,23 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
 
-    // 1. Search Users Logic
+    // Search Users 
     const handleSearch = async (e) => {
         const query = e.target.value;
+        console.log(query);
         setSearchQuery(query);
         if (query.length < 2) return setSearchResults([]);
         
         try {
-            // Tumhari search API yahan aayegi
-            const res = await axios.get(`${URL}/api/user/search?query=${query}`, { withCredentials: true });
-            setSearchResults(res.data); 
+            const res = await axios.post(`${URL}/api/user/search`, {query : searchQuery}, { withCredentials: true });
+            setSearchResults(res.data.users);
+            console.log(res);
         } catch (err) {
             console.error("Search error", err);
         }
     };
 
-    // 2. Select/Deselect User
+    // Select/Deselect User
     const toggleUser = (user) => {
         if (selectedUsers.find(u => u._id === user._id)) {
             setSelectedUsers(selectedUsers.filter(u => u._id !== user._id));
@@ -32,9 +34,12 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
         }
     };
 
-    // 3. Create Group API Call
+    // Create Group API Call
     const handleCreate = async () => {
-        if (!groupName || selectedUsers.length === 0) return alert("Details bharo bhai!");
+        if (!groupName || selectedUsers.length === 0) {
+            toast.error("please enter the required details")
+            return;
+        }
         try {
             const userIds = selectedUsers.map(u => u._id);
             const res = await axios.post(`${URL}/api/chat/group`, {
@@ -45,7 +50,8 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
             onGroupCreated(res.data.group);
             onClose();
         } catch (err) {
-            alert("Group create nahi ho paya!");
+            alert("Cannot create group!");
+            console.log(err);
         }
     };
 
@@ -60,7 +66,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                 <div className="p-4 flex flex-col gap-3 overflow-y-auto">
                     <input 
                         className="w-full p-2 border rounded focus:outline-blue-500"
-                        placeholder="Group Name (e.g. MCA Batch B)"
+                        placeholder="Group Name"
                         value={groupName}
                         onChange={(e) => setGroupName(e.target.value)}
                     />
@@ -80,7 +86,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                                 onClick={() => toggleUser(u)}
                                 className={`p-2 flex justify-between cursor-pointer rounded mb-1 ${selectedUsers.find(s => s._id === u._id) ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
                             >
-                                <span>{u.name}</span>
+                                <span>{u.username}</span>
                                 {selectedUsers.find(s => s._id === u._id) && <span className="text-blue-600">✓</span>}
                             </div>
                         )) : <p className="text-gray-400 text-xs text-center">Search results will show here</p>}
@@ -90,7 +96,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                     <div className="flex flex-wrap gap-2">
                         {selectedUsers.map(u => (
                             <span key={u._id} className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                                {u.name}
+                                {u.username}
                                 <button onClick={() => toggleUser(u)} className="font-bold">×</button>
                             </span>
                         ))}

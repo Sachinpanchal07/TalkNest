@@ -31,12 +31,10 @@ io.on("connection", (socket) => {
     
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-    // --- CHANGE 1: Room Joiner ---
-    // Frontend se group IDs ki array aayegi, user un sab rooms mein ghus jayega
-    socket.on("joinGroups", (groupIds) => {
+    socket.on("joinGroups", (groupIds) => { // groupIds is an array
         if (Array.isArray(groupIds)) {
             groupIds.forEach(id => socket.join(id));
-            console.log(`User ${userId} joined rooms:`, groupIds);
+            (`User ${userId} joined rooms:`, groupIds);
         }
     });
 
@@ -45,13 +43,10 @@ io.on("connection", (socket) => {
         io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
 
-    // --- CHANGE 2: Unified Send Message ---
-    // Humne receiverId ke saath chatId aur isGroup arguments add kiye hain
     socket.on("sendMessage", async ({ senderId, receiverId, chatId, text, isGroup }) => {
         try {
             let finalChatId = chatId;
 
-            // Agar 1-on-1 hai aur chatId nahi aayi, to purana logic (getOrCreateChat)
             if (!isGroup && !finalChatId) {
                 const chat = await getOrCreateChat(senderId, receiverId);
                 finalChatId = chat._id;
@@ -67,11 +62,8 @@ io.on("connection", (socket) => {
             const savedMessage = { ...newMessage.toObject(), receiverId, isGroup };
 
             if (isGroup) {
-                // Group Message: Pure room ko bhej do (isne hi to joinGroups kiya tha)
-                // 'io.to' se sender aur receiver dono ko mil jayega
                 io.to(finalChatId).emit("newMessage", savedMessage);
             } else {
-                // 1-on-1 Message: Purana logic
                 const receiverSocketId = userSocketMap[receiverId];
                 if (receiverSocketId) {
                     io.to(receiverSocketId).emit("newMessage", savedMessage);
@@ -139,7 +131,7 @@ io.on("connection", (socket) => {
 //     socket.on("joinGroups", (groupIds) => {
 //         groupIds.forEach(id => {
 //             socket.join(id);
-//             console.log(`User ${userId} joined room: ${id}`);
+//             (`User ${userId} joined room: ${id}`);
 //         });
 //     });
 

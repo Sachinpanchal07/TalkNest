@@ -1,5 +1,6 @@
 import { getOrCreateChat, getChatMessages } from "../services/chat.service.js";
 import Chat from "../models/chat.model.js";
+import Message from "../models/message.model.js";
 
 export async function getChatHistoryController(req, res) {
     try {
@@ -46,7 +47,7 @@ export const createGroupChat = async (req, res) => {
             .populate("participants", "-password")
             .populate("admin", "-password");
 
-            console.log("full group chat", fullGroupChat)
+            ("full group chat", fullGroupChat)
         res.status(201).json({ success: true, group: fullGroupChat });
     } catch (error) {
         console.error("Error creating group:", error);
@@ -64,10 +65,31 @@ export const fetchGroups = async (req, res) => {
         .populate("participants", "-password")
         .populate("admin", "-password")
         .sort({ updatedAt: -1 });
-
+        console.log('Groups in fetch gropu', groups);
         res.status(200).json({ success: true, groups });
     } catch (error) {
         console.error("Error fetching groups:", error);
         res.status(500).json({ message: "Failed to fetch groups" });
+    }
+};
+
+// get group mssges
+export const getGroupMessages = async (req, res) => {
+    try {
+        const { chatId } = req.params;
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) {
+            return res.status(404).json({ message: "Group not found" });
+        }
+
+        const messages = await Message.find({ chatId })
+            .populate("senderId", "username avatar") 
+            .sort({ createdAt: 1 });
+
+        res.status(200).json({ success: true, messages });
+    } catch (error) {
+        console.error("Error fetching group messages:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };

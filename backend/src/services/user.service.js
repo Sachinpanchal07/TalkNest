@@ -18,7 +18,7 @@ export async function findUsersByQuery(query, currentUserId) {
       ],
     }).select("-password");
 
-    console.log("Filtered Users:", users);
+    // console.log("Filtered Users:", users);
     return users;
   } catch (err) {
     console.log("Error in find user service: ", err);
@@ -151,7 +151,7 @@ export const getConnectedUsers = async (userId) => {
     }).populate("from to", "username avatar isOnline");
 
     // Filter out the current user from the results
-    console.log(connections);
+    // console.log(connections);
     return connections.map(invite => {
         return invite.from._id.toString() === userId.toString() ? invite.to : invite.from;
     });

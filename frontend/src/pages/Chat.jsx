@@ -10,8 +10,8 @@ const Chat = () => {
     const [connections, setConnections] = useState([]);
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
-    const [socket, setSocket] = useState(null);
-    const { user : currentUser  } = useUser();
+    // const [socket, setSocket] = useState(null);
+    const { user : currentUser, socket, setUserSocket  } = useUser();
     // const currentUser = JSON.parse(localStorage.getItem("user") || "null")
     const navigate = useNavigate();
     // console.log(currentUser);
@@ -24,19 +24,19 @@ const Chat = () => {
     };
 
     // make connection
-    useEffect(() => { 
-        if (!currentUser) return;
+    // useEffect(() => { 
+    //     if (!currentUser) return;
 
-        const newSocket = io(URL, {
-            query: { userId: currentUser._id }
-        });
-        setSocket(newSocket);
-        console.log("this is socket", newSocket);
+    //     const newSocket = io(URL, {
+    //         query: { userId: currentUser._id }
+    //     });
+    //     setUserSocket(newSocket);
+    //     console.log("this is socket", newSocket);
 
-        return () => {
-            newSocket.disconnect();
-        };
-    }, [currentUser]);
+    //     return () => {
+    //         newSocket.disconnect();
+    //     };
+    // }, [currentUser]);
 
 
     useEffect(() => {
@@ -100,7 +100,7 @@ const Chat = () => {
                     <h1 className="text-xl font-bold text-gray-800">Messages</h1>
                 </div>
                 <div className="p-4 border-b border-gray-200">
-                    <h1 onClick={()=>navigate("/groups")} socket = {socket} className="text-lg font-semibold text-gray-800 cursor-pointer">Groups</h1>
+                    <h1 onClick={()=>navigate("/groups")} className="text-lg font-semibold text-gray-800 cursor-pointer">Groups</h1>
                 </div>
                 <div className="overflow-y-auto flex-1">
                     {connections.map((user) => (
