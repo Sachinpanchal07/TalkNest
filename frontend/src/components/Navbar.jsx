@@ -32,11 +32,14 @@ function Navbar() {
           <>
             <div className="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
               {/* User Avatar - using UI Avatars if user.avatar is missing */}
-              <img 
+              {/* <img 
                 src={user.avatar || `https://ui-avatars.com/api/?name=${user.username}&background=2563eb&color=fff`} 
                 alt="Profile" 
                 className="w-8 h-8 rounded-full object-cover border border-blue-200"
-              />
+              /> */}
+              <div className="w-8 h-8 rounded-full bg-pink-400 flex items-center justify-center text-white font-bold text-lg uppercase shadow-sm">
+                {user.username?.charAt(0) || "?"}
+              </div>
               <span className="font-medium text-gray-700 hidden sm:block">
                 {user.username}
               </span>

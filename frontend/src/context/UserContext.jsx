@@ -7,7 +7,9 @@ export const UserProvider = ({ children }) => {
     const initialUser = savedData ? JSON.parse(savedData) : null;
     const [user, setUserState] = useState(initialUser);
     const [socket, setSocket] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
+    // set login user
     const setUser = (userData) => {
         setUserState(userData);
         if (userData) {
@@ -24,13 +26,17 @@ export const UserProvider = ({ children }) => {
         setSocket(newSocket);
     }
 
+    // set online users
+    const saveOnlineUsers = (users)=>{
+        setOnlineUsers([...users])
+    }
     const isAuthenticated = ()=>{
         if(user) return true;
         return false;
     }
 
     return (
-        <UserContext.Provider value={{ user, setUser, isAuthenticated, socket, setUserSocket }}>
+        <UserContext.Provider value={{ user, setUser, isAuthenticated, socket, setUserSocket, onlineUsers, setOnlineUsers }}>
             {children}
         </UserContext.Provider>
     );

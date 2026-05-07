@@ -20,15 +20,19 @@ import { URL } from './config/constant'
 
 function App() {
   
-  const { user, socket, setUserSocket } = useUser();
-
+  // create socket connection on login
+  const { user, socket, setUserSocket, onlineUsers, setOnlineUsers } = useUser();
   useEffect(() => {
     if (user) {
         const newSocket = io(URL, {
             query: { userId: user._id }
         });
+        setUserSocket(newSocket);
         
-        setUserSocket(newSocket); 
+        // set online users
+        newSocket.on("getOnlineUsers", (onlineUsers)=>{
+          setOnlineUsers(onlineUsers);
+        })
 
         return () => newSocket.disconnect();
     }
