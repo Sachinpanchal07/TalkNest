@@ -1,4 +1,4 @@
-import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers, getSentInvitesService, getSentInvitationsService} from "../services/user.service.js"
+import {findUsersByQuery, sendInviteReq, sendSingleUserInvite, updateInviteStatus, getReceivedInvites, getConnectedUsers, getSentInvitesService, getSentInvitationsService, searchConnectionsService} from "../services/user.service.js"
 
 // Search User
 export async function userSearchController(req, res, next) {
@@ -156,3 +156,25 @@ export const getAllInvitations = async (req, res) => {
 };
 
 // serach in connections to add in group
+export const searchConnectionsController = async (req, res)=>{
+    const {query} = req.body;
+    const user = req.user;
+    try{
+        if(!query){
+            throw new Error("Please enter the query")
+        }
+        const connections =  await searchConnectionsService(query, user);
+
+        console.log(query)
+        console.log("printing in connections", connections);
+        // fileter for query
+        const filteredFriends = connections.filter(friend => 
+            friend.username.includes(query)
+        );
+
+        console.log("printing in controler", filteredFriends);
+        res.status(200).json({"success" : true, filteredFriends});
+    }catch(err){
+        res.status(500).json({"success" : false, "message" : err.message})
+    }
+}

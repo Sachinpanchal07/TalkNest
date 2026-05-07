@@ -176,3 +176,24 @@ export const getSentInvitationsService = async (userId) => {
     const invitations = await Invitation.find({ from: userId }).select("to status");
     return invitations;
 };
+
+// serach connection service
+export const searchConnectionsService = async (query, user) => {
+  const connections = await Invitation.find({
+    $or: [
+      { from: user._id },
+      { to: user._id }
+    ],
+    status: "accepted"
+  }).populate("from to", "username avatar"); 
+
+  const friendList = connections.map(conn => {
+    if (conn.from._id.toString() === user._id.toString()) {
+      return conn.to;
+    }
+    return conn.from;
+  });
+
+  // console.log("Friend list processed:", friendList);
+  return friendList;
+};

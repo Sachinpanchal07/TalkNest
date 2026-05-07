@@ -65,7 +65,7 @@ export const fetchGroups = async (req, res) => {
         .populate("participants", "-password")
         .populate("admin", "-password")
         .sort({ updatedAt: -1 });
-        console.log('Groups in fetch gropu', groups);
+        // console.log('Groups in fetch gropu', groups);
         res.status(200).json({ success: true, groups });
     } catch (error) {
         console.error("Error fetching groups:", error);

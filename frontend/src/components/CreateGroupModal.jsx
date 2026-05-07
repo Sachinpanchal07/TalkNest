@@ -17,11 +17,13 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
         if (query.length < 2) return setSearchResults([]);
         
         try {
-            const res = await axios.post(`${URL}/api/user/search`, {query : searchQuery}, { withCredentials: true });
-            setSearchResults(res.data.users);
+            const res = await axios.post(`${URL}/api/user/serachConnections`, {query : searchQuery}, { withCredentials: true });
+            setSearchResults(res.data.filteredFriends
+);
             console.log(res);
         } catch (err) {
             console.error("Search error", err);
+            toast.error(err.response.data.message)
         }
     };
 
@@ -104,7 +106,7 @@ const CreateGroupModal = ({ onClose, onGroupCreated }) => {
                 </div>
 
                 <div className="p-4 border-t flex gap-2">
-                    <button onClick={onClose} className="flex-1 py-2 bg-gray-200 rounded">Cancel</button>
+                    <button onClick={onClose} className="flex-1 py-2 bg-gray-200 rounded" cursor-pointer>Cancel</button>
                     <button onClick={handleCreate} className="flex-1 py-2 bg-blue-600 text-white rounded">Create Group</button>
                 </div>
             </div>
