@@ -68,6 +68,8 @@ const Groups = () => {
       toast.error("Could not load previous messages");
     }
   };
+
+  // fetch group once after load
   useEffect(() => {
     fetchGroups();
   }, [socket]);

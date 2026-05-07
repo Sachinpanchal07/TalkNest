@@ -23,21 +23,6 @@ const Chat = () => {
         return "";
     };
 
-    // make connection
-    // useEffect(() => { 
-    //     if (!currentUser) return;
-
-    //     const newSocket = io(URL, {
-    //         query: { userId: currentUser._id }
-    //     });
-    //     setUserSocket(newSocket);
-    //     console.log("this is socket", newSocket);
-
-    //     return () => {
-    //         newSocket.disconnect();
-    //     };
-    // }, [currentUser]);
-
 
     useEffect(() => {
         if (!socket) return;
