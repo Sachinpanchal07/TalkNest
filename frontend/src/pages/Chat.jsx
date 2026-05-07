@@ -4,6 +4,7 @@ import { URL } from '../config/constant';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
+import SearchInChat from '../components/SearchInChat';
 
 const Chat = () => {
     const [selectedUser, setSelectedUser] = useState(null);
@@ -84,6 +85,7 @@ const Chat = () => {
                 <div className="p-4 border-b border-gray-200">
                     <h1 className="text-xl font-bold text-gray-800">Messages</h1>
                 </div>
+                <SearchInChat onSelectUser={(user) => setSelectedUser(user)} />
                 <div className="p-4 border-b border-gray-200">
                     <h1 onClick={()=>navigate("/groups")} className="text-lg font-semibold text-gray-800 cursor-pointer">Groups</h1>
                 </div>
